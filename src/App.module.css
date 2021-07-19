@@ -1,0 +1,14 @@
+@import url('https://fonts.googleapis.com/css2?family=Roboto&display=swap');
+html,body{
+	font-size: 16px;
+}
+a,button{
+	font-size: 16px;
+	cursor: pointer;
+}
+.main {
+	max-width: 1280px;
+	width: 100%;
+	margin: 0 auto;
+	font-family: Roboto;
+}

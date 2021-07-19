@@ -1,0 +1,141 @@
+.home .table {
+  border-collapse: collapse;
+  width: 100%;
+  margin-bottom: 1rem;
+}
+
+.home .table tbody tr:nth-child(odd) {
+   background-color: #ECECEC;
+}
+.home .table tbody tr:hover {
+	background: #e8f4f8;
+	cursor: pointer;
+}
+
+.home .table th {
+	background: #ccc;
+	cursor: pointer;
+}
+.home .table th.noPointer{
+	cursor: default;
+}
+.home .table th button {
+	border: 0;
+	background: none;
+	padding: .25rem;
+	margin-left: .5rem;
+	line-height: 1.5rem;
+	padding: .25rem .5rem;
+	pointer-events: none;
+	font-weight: bold;
+}
+.home .table th button img{
+	vertical-align: bottom;
+}
+.home .table th button .asc{
+	transform: scaleY(-1);
+}
+.home .table td, .home .table th {
+  border: 1px solid #999;
+  padding: 0.5rem;
+  text-align: left;
+}
+.home .table td img {
+	max-width: 125px;
+	width: 100%;
+}
+
+.home .table td .favorite {
+	padding: 0;
+	border: 0;
+	background-color: transparent;
+	position: absolute;
+}
+.home .table td .favorite img {
+	width: 24px;
+	display: block;
+}
+
+.home label {
+	display: block;
+	font-size: 16px;
+	margin-top: .5rem;
+}
+.home input {
+	padding: .25rem;
+	border-color: #000;
+	border-radius: .25rem;
+	font-size: 16px;
+	width: 100%;
+	box-sizing: border-box; 
+}
+.home .checkboxItem input{
+	width: auto;
+	margin-bottom: 1rem;
+}
+.home .checkboxItem input {
+	min-width: auto;
+	padding: 0;
+}
+.home select {
+	min-width: 250px;
+	width: 100%;
+	border-color: #000;
+	padding: .25rem;
+	border-radius: .25rem;
+	font-size: 16px;
+	border: 2px solid #000;
+}
+.home .reset {
+	line-height: 1.5rem;
+	padding: .25rem .5rem;
+	margin-right: .5rem;
+}
+.home .reset img{
+	vertical-align: bottom;
+}
+.home .showDesktop {
+	display: none;
+}
+.home .clickDisabled {
+	pointer-events: none;
+}
+
+
+@media (min-width: 1024px) { 
+	
+	.home select, .home input {
+		width: auto;
+		margin-right: .5rem;
+		min-width: 250px;
+	}
+	.home .flex {
+		display: flex;
+		width: 100%;
+		margin-bottom: 1rem;
+		align-items: baseline;
+  		justify-content: center;
+	}
+	.home .flexItem{
+		margin-top: auto;
+	}
+	.home .checkboxItem {
+		margin-top: auto;
+		margin-right: 1rem;
+		margin-bottom: 0;
+	}
+	.home .checkboxItem label{
+		margin: 0;
+	}
+	.home .checkboxItem input{
+		margin-bottom: .75rem;
+	}
+	.home .push {
+		margin-left: auto;
+	}
+	.home .showDesktop {
+		display: table-cell;
+	}
+
+
+}

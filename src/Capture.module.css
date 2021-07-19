@@ -1,0 +1,8 @@
+.capture {
+	display: flex;
+	justify-content: space-between;
+	margin-bottom: .5rem;
+}
+.capture button{
+	padding: .5rem;
+}

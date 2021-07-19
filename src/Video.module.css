@@ -1,0 +1,57 @@
+.border {
+	border: 1px solid black;
+}
+canvas {
+	display: none;
+}
+
+.crossHairs {
+	position: relative;
+	z-index: 0;
+}
+.crossHairs .hor{
+	position: absolute;
+	top: 50%;
+	border-top: 1px solid red;
+	height: 1px;
+	width: 100%;
+	z-index: 1;
+}
+.crossHairs .ver{
+	position: absolute;
+	left: 50%;
+	border-left: 1px solid red;
+	width: 1px;
+	height: 100%;
+	z-index: 1;
+}
+.crossHairs .small{
+	left: 37%;
+	top: 37%;
+	position: absolute;
+	width: 25%;
+	height: 25%;
+	border: 1px solid white;
+	display: block;
+	z-index: 1;
+}
+.crossHairs .medium{
+	left: 25%;
+	top: 25%;
+	position: absolute;
+	width: 50%;
+	height: 50%;
+	border: 1px solid white;
+	display: block;
+	z-index: 1;
+}
+.crossHairs .large{
+	left: 10%;
+	top: 10%;
+	position: absolute;
+	width: 80%;
+	height: 80%;
+	border: 1px solid white;
+	display: block;
+	z-index: 1;
+}
