@@ -50,19 +50,19 @@ class Form extends Component {
 				</select>
 
 	    		<label htmlFor="year">Year</label>
-	    		<input type="text" id="year" name="year" placeholder="1988" value={this.state.year} onChange={this.handleChange} />
+	    		<input type="text" id="year" name="year" placeholder="1988" value={this.state.year} autocomplete="yes" onChange={this.handleChange} />
 
 	    		<label htmlFor="name">Name</label>
-	    		<input type="text" id="name" name="name" placeholder="Silver Dollar" value={this.state.name} onChange={this.handleChange} />
+	    		<input type="text" id="name" name="name" placeholder="Silver Dollar" value={this.state.name} autocomplete="yes" onChange={this.handleChange} />
 
 	    		<label htmlFor="value">Value</label>
-	    		<input type="text" id="value" name="value" placeholder="1" value={this.state.value} onChange={this.handleChange} />
+	    		<input type="text" id="value" name="value" placeholder="1" value={this.state.value} autocomplete="yes" onChange={this.handleChange} />
 
 	    		<label htmlFor="uscoinbook">US Coin Book</label>
-	    		<input type="text" id="uscoinbook" name="uscoinbook" placeholder="https://" value={this.state.uscoinbook} onChange={this.handleChange} />
+	    		<input type="text" id="uscoinbook" name="uscoinbook" placeholder="https://" value={this.state.uscoinbook} autocomplete="yes" onChange={this.handleChange} />
 
 	    		<label htmlFor="estimate">Estimate</label>
-	    		<input type="text" id="estimate" name="estimate" placeholder="100" value={this.state.estimate} onChange={this.handleChange} />
+	    		<input type="text" id="estimate" name="estimate" placeholder="100" value={this.state.estimate} autocomplete="yes" onChange={this.handleChange} />
 
 	    		<label htmlFor="grade">Grade</label>
 	            <select value={this.state.grade}  id="grade" name="grade" onChange={this.handleChange} >
