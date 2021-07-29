@@ -173,15 +173,10 @@ const Home = props => {
 			localStorage.setItem('filtered', JSON.stringify(filtered));
 		}, [filtered,sort,dir]);
 
-
 		const total = '$' + Object.values(filtered).reduce((t, {estimate}) => t + parseFloat(estimate), 0).toFixed(2);
 	
-
-
-
-
 		const sortItem = (props) => {	
-			console.log(props);	
+			//console.log(props);	
 			if(dir === 'asc' && sort === props){
 				setDir('desc');
 				localStorage.setItem('dir', 'desc');
