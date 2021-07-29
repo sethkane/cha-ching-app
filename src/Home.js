@@ -49,6 +49,11 @@ const SortIcon = ({sort, dir, sortItem, ...props}) => {
 };
 
 const SortHeading = ({sort, dir, sortItem, ...props}) => {
+	if(dir == 'desc') {
+		dir = 'descending'
+	} else {
+		dir = 'ascending'
+	}
 	return (
 		<th aria-sort={sort === props.id ? dir : 'none'} className={props.showmodbile === 'false'? styles.showDesktop : ''} onClick={() => sortItem(props.id)}><button aria-label={props.arialabel} className={styles.clickDisabled} onClick={() => sortItem(props.id)}>{props.name}<SortIcon props={props.id} sort={sort} /></button></th>
 	);
