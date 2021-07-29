@@ -411,7 +411,7 @@ const Home = props => {
 					<tbody>
 						{ filtered.sort((a, b) => returnSort(a,b)).slice(0, items).map(coin => 
 							<tr key={coin.docid}  onClick={()=> {goTo('/coin/' + coin.id)}}>
-								<td><Link className={styles.clickDisabled} to={'/coin/' + coin.id}>{coin.id}</Link></td>
+								<td><Link aria-label={'View details Coin #' + coin.id + ' ' + coin.year + '-' + coin.mint + ' ' + coin.name } className={styles.clickDisabled} to={'/coin/' + coin.id}>{coin.id}</Link></td>
 								<td>{coin.year}</td>
 								<td className={styles.showDesktop}>{coin.name}</td>
 								<td className={styles.showDesktop}>{coin.mint}</td>
