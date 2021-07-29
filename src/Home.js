@@ -36,6 +36,23 @@ const dateCompare = (d1, d2) => {
     }
 }
 
+const SortIcon = ({sort, dir, sortItem, ...props}) => {
+	return (
+		<span aria-hidden="true">
+		{ props.props === sort
+			? <img src="images/sort.svg" className={`${dir === 'asc' ? styles.asc : styles.desc}`} alt="" />
+			: ''
+		}
+		</span>
+
+	);
+};
+
+const SortHeading = ({sort, dir, sortItem, ...props}) => {
+	return (
+		<th aria-sort={sort === props.id ? dir : 'none'} className={props.showmodbile === 'false'? styles.showDesktop : ''} onClick={() => sortItem(props.id)}><button aria-label={props.arialabel} className={styles.clickDisabled} onClick={() => sortItem(props.id)}>{props.name}<SortIcon props={props.id} sort={sort} /></button></th>
+	);
+}
 
 const Home = props => {
 
@@ -156,28 +173,8 @@ const Home = props => {
 			localStorage.setItem('filtered', JSON.stringify(filtered));
 		}, [filtered,sort,dir]);
 
-		const total = '$' + Object.values(filtered).reduce((t, {estimate}) => (t + parseFloat(estimate)), 0).toFixed(2);
-
-		const SortIcon = (props) => {
-			return (
-				<span aria-hidden="true">
-				{ props.props === sort
-					? <img src="images/sort.svg" className={`${dir === 'asc' ? styles.asc : styles.desc}`} alt="" />
-					: ''
-				}
-				</span>
-
-			);
-		};
-
-		const SortHeading = (props) => {
-			return (
-				<th aria-sort={sort === props.id ? dir : 'none'} className={props.showmodbile === 'false'? styles.showDesktop : ''} onClick={() => sortItem(props.id)}><button aria-label={props.arialabel} className={styles.clickDisabled} onClick={() => sortItem(props.id)}>{props.name}<SortIcon props={props.id} /></button></th>
-			);
-		}
-
-
-
+		const total = '$' + Object.values(filtered).reduce((t, {estimate}) => t + parseFloat(estimate), 0).toFixed(2);
+	
 		const sortItem = (props) => {	
 			//console.log(props);	
 			if(dir === 'asc' && sort === props){
@@ -397,10 +394,10 @@ const Home = props => {
 				<table className={styles.table}>
 					<thead>
 						<tr>
-							<SortHeading name="Coin #" id="id" showmodbile="true" arialabel="Sort by Coin #" />
-							<SortHeading name="Year" id="year" showmodbile="true" arialabel="Sort by Year" />
-							<SortHeading name="Name" id="name" showmodbile="false" arialabel="Sort by Name" />
-							<SortHeading name="Mint" id="mint" showmodbile="false" arialabel="Sort by Mint" />
+							<SortHeading sort={sort} dir={dir} sortItem={sortItem} name="Coin #" id="id" showmodbile="true" arialabel="Sort by Coin #" />
+							<SortHeading sort={sort} dir={dir} sortItem={sortItem} name="Year" id="year" showmodbile="true" arialabel="Sort by Year" />
+							<SortHeading sort={sort} dir={dir} sortItem={sortItem} name="Name" id="name" showmodbile="false" arialabel="Sort by Name" />
+							<SortHeading sort={sort} dir={dir} sortItem={sortItem} name="Mint" id="mint" showmodbile="false" arialabel="Sort by Mint" />
 							<th className={styles.noPointer}>Front</th>
 						</tr>
 					</thead>
