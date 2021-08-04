@@ -88,6 +88,7 @@ const Home = props => {
 		const localFilter = localStorage.getItem('filter');
 		const localItems = localStorage.getItem('items');
 		const searchField = React.createRef();
+		const linkRef = React.createRef(null);
 		const history = useHistory();
 		const hash = useLocation().hash;
 		const title = 'Cha-Ching Coin Database';
@@ -284,6 +285,10 @@ const Home = props => {
 			history.push(url)
 		}
 
+		const setTextInputRef = element => {
+	      linkRef= element;
+	    }
+
 		const handleMore = event => {
 			if(items >= filtered.length) {
 				setMore( items );
@@ -411,9 +416,15 @@ const Home = props => {
 
 					{filtered?.length ? (
 					<tbody>
-						{ filtered.sort((a, b) => returnSort(a,b)).slice(0, items).map(coin => 
+						{ filtered.sort((a, b) => returnSort(a,b)).slice(0, items).map( (coin,index) => 
 							<tr key={coin.docid}  onClick={()=> {goTo('/coin/' + coin.id)}}>
-								<td><Link aria-label={'View details Coin #' + coin.id + ' ' + coin.year + '-' + coin.mint + ' ' + coin.name } className={styles.clickDisabled} to={'/coin/' + coin.id}>{coin.id}</Link></td>
+								<td><Link 
+									ref={setTextInputRef => this[`roll-${index}`] = setTextInputRef} 
+									key={index} 
+									id={index}
+									aria-label={'View details Coin #' + coin.id + ' ' + coin.year + '-' + coin.mint + ' ' + coin.name } 
+									className={styles.clickDisabled} 
+									to={'/coin/' + coin.id}>{coin.id}</Link></td>
 								<td>{coin.year}</td>
 								<td className={styles.showDesktop}>{coin.name}</td>
 								<td className={styles.showDesktop}>{coin.mint}</td>
