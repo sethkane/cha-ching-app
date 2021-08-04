@@ -59,6 +59,18 @@ const SortHeading = ({sort, dir, sortItem, ...props}) => {
 	);
 }
 
+
+const FavoriteIcon = props => {
+  return (
+    <span className={styles.favorite}>
+        {props.fave === 'true' 
+          ? <img src="/images/favorite-filled-white.svg" alt="Favorite" />
+          : ''
+        }
+        </span>
+    )
+}
+
 const Home = props => {
 
 		const [search, setSearch] = useState('');
@@ -305,16 +317,6 @@ const Home = props => {
 			}
 		}
 
-		const FavoriteIcon = props => {
-	      return (
-	        <span className={styles.favorite}>
-	            {props.fave === 'true' 
-	              ? <img src="/images/favorite-filled-white.svg" alt="Favorite" />
-	              : ''
-	            }
-	            </span>
-	        )
-	    }
 
 		const goTo = props => {
 			history.push(props)
