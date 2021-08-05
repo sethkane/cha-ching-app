@@ -1,4 +1,4 @@
-import React, {useEffect, useState, useMemo} from 'react';
+import React, {useEffect, useState, useMemo, useRef} from 'react';
 import { Link, useHistory, useLocation  } from "react-router-dom";
 import firebaseUtil from './FirebaseUtil';
 import styles from './Home.module.css'; 
@@ -88,6 +88,7 @@ const Home = props => {
 		const localFilter = localStorage.getItem('filter');
 		const localItems = localStorage.getItem('items');
 		const searchField = React.createRef();
+		const linkRef = useRef({});
 		const history = useHistory();
 		const hash = useLocation().hash;
 		const title = 'Cha-Ching Coin Database';
@@ -284,6 +285,10 @@ const Home = props => {
 			history.push(url)
 		}
 
+		const setTextInputRef = element => {
+	      linkRef= element;
+	    }
+
 		const handleMore = event => {
 			if(items >= filtered.length) {
 				setMore( items );
@@ -292,7 +297,12 @@ const Home = props => {
 				setMore( items + 10 );
 				localStorage.setItem('items', parseFloat(items + 10));
 			}
+
+			setTimeout(function(){
+				linkRef.current[(items-1)+1].focus();
+			},500)
 		}
+		
 		
 		const handleSearch = event => {
 			setSearch(event.target.value);
@@ -302,7 +312,6 @@ const Home = props => {
 
 		const handleFilter = event => {
 			setFilter(event.target.value);
-			console.log(event.target.value)
 			localStorage.setItem('filter', event.target.value);
 		};
 
@@ -411,9 +420,13 @@ const Home = props => {
 
 					{filtered?.length ? (
 					<tbody>
-						{ filtered.sort((a, b) => returnSort(a,b)).slice(0, items).map(coin => 
+						{ filtered.sort((a, b) => returnSort(a,b)).slice(0, items).map( (coin,index) => 
 							<tr key={coin.docid}  onClick={()=> {goTo('/coin/' + coin.id)}}>
-								<td><Link aria-label={'View details Coin #' + coin.id + ' ' + coin.year + '-' + coin.mint + ' ' + coin.name } className={styles.clickDisabled} to={'/coin/' + coin.id}>{coin.id}</Link></td>
+								<td><Link 
+									ref={(element) => linkRef.current[index]=element}
+									aria-label={'View details Coin #' + coin.id + ' ' + coin.year + '-' + coin.mint + ' ' + coin.name } 
+									className={styles.clickDisabled} 
+									to={'/coin/' + coin.id}>{coin.id}</Link></td>
 								<td>{coin.year}</td>
 								<td className={styles.showDesktop}>{coin.name}</td>
 								<td className={styles.showDesktop}>{coin.mint}</td>
