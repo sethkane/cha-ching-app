@@ -177,7 +177,7 @@ const Home = props => {
 		const filtered = useMemo(() => {
 
 			return coins.filter(coin => {
-				let fullName = coin.year + '-' + coin.mint + ' ' + coin.name;
+				let fullName = coin.year + '-' + coin.mint + ' ' + coin.name + ' ' + coin.notes;
 
 				if(coin.favorite === 'true') {
 					fullName = fullName + ' :favorite'
