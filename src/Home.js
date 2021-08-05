@@ -95,7 +95,6 @@ const Home = props => {
 		const image = 'https://firebasestorage.googleapis.com/v0/b/cha-ching-7e248.appspot.com/o/1620405863007_front.png?alt=media&token=59ed6929-8b4e-4150-a0ab-bf70cf1f9dfb';
 		const date = new Date();
 		document.title = title;
-		console.log(linkRef)
 
 	    // Set Meta Date For This page
 	    /// Change Name
@@ -298,8 +297,12 @@ const Home = props => {
 				setMore( items + 10 );
 				localStorage.setItem('items', parseFloat(items + 10));
 			}
-			console.log(linkRef.current);
+
+			setTimeout(function(){
+				linkRef.current[(items-1)+1].focus();
+			},500)
 		}
+		
 		
 		const handleSearch = event => {
 			setSearch(event.target.value);
@@ -309,7 +312,6 @@ const Home = props => {
 
 		const handleFilter = event => {
 			setFilter(event.target.value);
-			console.log(event.target.value)
 			localStorage.setItem('filter', event.target.value);
 		};
 
