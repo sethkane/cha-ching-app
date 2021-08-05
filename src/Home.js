@@ -1,4 +1,4 @@
-import React, {useEffect, useState, useMemo} from 'react';
+import React, {useEffect, useState, useMemo, useRef} from 'react';
 import { Link, useHistory, useLocation  } from "react-router-dom";
 import firebaseUtil from './FirebaseUtil';
 import styles from './Home.module.css'; 
@@ -88,13 +88,14 @@ const Home = props => {
 		const localFilter = localStorage.getItem('filter');
 		const localItems = localStorage.getItem('items');
 		const searchField = React.createRef();
-		const linkRef = React.createRef(null);
+		const linkRef = useRef({});
 		const history = useHistory();
 		const hash = useLocation().hash;
 		const title = 'Cha-Ching Coin Database';
 		const image = 'https://firebasestorage.googleapis.com/v0/b/cha-ching-7e248.appspot.com/o/1620405863007_front.png?alt=media&token=59ed6929-8b4e-4150-a0ab-bf70cf1f9dfb';
 		const date = new Date();
 		document.title = title;
+		console.log(linkRef)
 
 	    // Set Meta Date For This page
 	    /// Change Name
@@ -297,6 +298,7 @@ const Home = props => {
 				setMore( items + 10 );
 				localStorage.setItem('items', parseFloat(items + 10));
 			}
+			console.log(linkRef.current);
 		}
 		
 		const handleSearch = event => {
@@ -419,9 +421,7 @@ const Home = props => {
 						{ filtered.sort((a, b) => returnSort(a,b)).slice(0, items).map( (coin,index) => 
 							<tr key={coin.docid}  onClick={()=> {goTo('/coin/' + coin.id)}}>
 								<td><Link 
-									ref={setTextInputRef => this[`roll-${index}`] = setTextInputRef} 
-									key={index} 
-									id={index}
+									ref={(element) => linkRef.current[index]=element}
 									aria-label={'View details Coin #' + coin.id + ' ' + coin.year + '-' + coin.mint + ' ' + coin.name } 
 									className={styles.clickDisabled} 
 									to={'/coin/' + coin.id}>{coin.id}</Link></td>
