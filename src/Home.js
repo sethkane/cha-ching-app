@@ -49,7 +49,7 @@ const SortIcon = ({sort, dir, sortItem, ...props}) => {
 };
 
 const SortHeading = ({sort, dir, sortItem, ...props}) => {
-	if(dir == 'desc') {
+	if(dir === 'desc') {
 		dir = 'descending'
 	} else {
 		dir = 'ascending'
@@ -155,7 +155,7 @@ const Home = props => {
 			if(localSearch !== null) {
 				setSearch(localStorage.getItem('search').replace('#',''))
 			}
-		}, []);
+		},[]);
 
 		const getCoinTypes = (coins) => {
 			const result = [];
@@ -285,9 +285,6 @@ const Home = props => {
 			history.push(url)
 		}
 
-		const setTextInputRef = element => {
-	      linkRef= element;
-	    }
 
 		const handleMore = event => {
 			if(items >= filtered.length) {

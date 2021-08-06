@@ -2,9 +2,11 @@ import {useEffect, useState, useRef} from 'react';
 import firebaseUtil from './FirebaseUtil'
 import {Link, useParams } from "react-router-dom";
 import styles from './CoinDetail.module.css'; 
+import Magnifier from './Magnifier';
+
 
 const getCoin = id => {
-  console.log('Firebase Get One');
+  // console.log('Firebase Get One');
   return firebaseUtil.getDb().collection('coins').where('id', '==', id)
     .get()
     .then((querySnapshot) => {
@@ -148,7 +150,7 @@ const CoinDetail = props => {
       
 
       if(localCoins !== null){
-        console.log('Local');
+        // console.log('Local');
         setAllCoins(JSON.parse(localCoins));
       } else {
         getAllCoins().then(response => {
@@ -181,8 +183,13 @@ const CoinDetail = props => {
           </ul>
 
             <div className={styles.flex}>
-              <div className={styles.flexItem}><img src={coin[0].photoArrPaths[0]} alt={'Front - ' + coin[0].year +'-' + coin[0].mint + ' ' + coin[0].name} /></div>
-              <div className={styles.flexItem}><img src={coin[0].photoArrPaths[1]} alt={'Back - ' + coin[0].year +'-' + coin[0].mint + ' ' + coin[0].name} /></div>
+
+              <div className={styles.flexItem}>
+                <Magnifier src={coin[0].photoArrPaths[0]} alt={'Front - ' + coin[0].year +'-' + coin[0].mint + ' ' + coin[0].name} />
+              </div>
+              <div className={styles.flexItem}>
+                <Magnifier src={coin[0].photoArrPaths[1]} alt={'Back - ' + coin[0].year +'-' + coin[0].mint + ' ' + coin[0].name} />
+              </div>
             </div>
 
             <table className={styles.table}>
