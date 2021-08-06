@@ -23,7 +23,9 @@ const Magnifier = (props) => {
 		imgHeight = theImage.current.height;
 
 		theGlass.current.style.backgroundImage = "url(" + src + ")";
-		theGlass.current.style.backgroundSize = (imgWidth * zoom) + "px " + (imgHeight * zoom) + "px";
+		if (imgWidth > 0 && imgWidth > 0 ){
+			theGlass.current.style.backgroundSize = (imgWidth * zoom) + "px " + (imgHeight * zoom) + "px";
+		}
 
 		w = theGlass.current.offsetWidth / 2;
   		h = theGlass.current.offsetHeight / 2;
@@ -72,8 +74,8 @@ const Magnifier = (props) => {
 
 	return (
 	    	<div className={styles.magnifier}>
-	    		<span onMouseMove={TrackMouse} onMouseOut={HideGlass} ref={theGlass} className={styles.glass}></span>
-	    		<img onMouseMove={TrackMouse} onMouseOut={HideGlass} ref={theImage} src={src} alt={props.alt} />
+	    		<span onMouseMove={TrackMouse} onMouseOut={HideGlass} onTouchMove={TrackMouse} ref={theGlass} className={styles.glass}></span>
+	    		<img onMouseMove={TrackMouse} onMouseOut={HideGlass} onTouchMove={TrackMouse} ref={theImage} src={src} alt={props.alt} />
 	    	</div>
 	    );
 
