@@ -23,7 +23,9 @@ const Magnifier = (props) => {
 		imgHeight = theImage.current.height;
 
 		theGlass.current.style.backgroundImage = "url(" + src + ")";
-		theGlass.current.style.backgroundSize = (imgWidth * zoom) + "px " + (imgHeight * zoom) + "px";
+		if (imgWidth > 0 && imgWidth > 0 ){
+			theGlass.current.style.backgroundSize = (imgWidth * zoom) + "px " + (imgHeight * zoom) + "px";
+		}
 
 		w = theGlass.current.offsetWidth / 2;
   		h = theGlass.current.offsetHeight / 2;
