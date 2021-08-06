@@ -74,8 +74,8 @@ const Magnifier = (props) => {
 
 	return (
 	    	<div className={styles.magnifier}>
-	    		<span onMouseMove={TrackMouse} onMouseOut={HideGlass} onTouchMove={TrackMouse} ref={theGlass} className={styles.glass}></span>
-	    		<img onMouseMove={TrackMouse} onMouseOut={HideGlass} onTouchMove={TrackMouse} ref={theImage} src={src} alt={props.alt} />
+	    		<span onMouseMove={TrackMouse} onMouseOut={HideGlass} ref={theGlass} className={styles.glass}></span>
+	    		<img onMouseMove={TrackMouse} onMouseOut={HideGlass} ref={theImage} src={src} alt={props.alt} />
 	    	</div>
 	    );
 
