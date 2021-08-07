@@ -8,7 +8,7 @@ const getCoins = () => {
 	return firebaseUtil.getDb()
    		.collection('coins')
    		.orderBy('id')
-		//.limit(5) // Use this for Development
+		.limit(5) // Use this for Development
     	.get()
      	.then(querySnapshot => {
 			return querySnapshot.docs.map(doc => ({docid: doc.id, ...doc.data()}));
@@ -94,6 +94,7 @@ const Home = props => {
 		const title = 'Cha-Ching Coin Database';
 		const image = 'https://firebasestorage.googleapis.com/v0/b/cha-ching-7e248.appspot.com/o/1620405863007_front.png?alt=media&token=59ed6929-8b4e-4150-a0ab-bf70cf1f9dfb';
 		const date = new Date();
+
 		document.title = title;
 
 	    // Set Meta Date For This page
@@ -175,14 +176,36 @@ const Home = props => {
 		const coinTypes = getCoinTypes(coins);
 
 		const filtered = useMemo(() => {
+	
 
 			return coins.filter(coin => {
-				let fullName = coin.year + '-' + coin.mint + ' ' + coin.name + ' ' + coin.notes;
 
-				if(coin.favorite === 'true') {
-					fullName = fullName + ' :favorite'
+				// Favorites
+				if (fave) {
+					if(coin.favorite === 'false') {
+						return false
+					}
 				}
-				return   (fullName.toLowerCase().indexOf(search.toLowerCase()) !== -1 || coin.id.indexOf(search) !== -1 ) && coin.name.toLowerCase().indexOf(filter.toLowerCase()) !== -1 && fullName.toLowerCase().indexOf(fave.toLowerCase()) !== -1 
+
+				/// Filter Drop Down
+				if (coin.name.toLowerCase().indexOf(filter.toLowerCase()) === -1) {
+					return false
+				}
+
+				/// Search Query
+				if( coin.notes) {
+					if (coin.id.toLowerCase().indexOf(search.toLowerCase()) === -1 && coin.name.toLowerCase().indexOf(search.toLowerCase()) === -1 && coin.notes.toLowerCase().indexOf(search.toLowerCase()) === -1) {
+						return false
+					}
+				} else {
+					if (coin.id.toLowerCase().indexOf(search.toLowerCase()) === -1 && coin.name.toLowerCase().indexOf(search.toLowerCase()) === -1 ) {
+						return false
+					}
+				}
+
+				return true
+
+				// return   (fullName.toLowerCase().indexOf(search.toLowerCase()) !== -1 || coin.id.indexOf(search) !== -1 ) && coin.name.toLowerCase().indexOf(filter.toLowerCase()) !== -1 && fullName.toLowerCase().indexOf(fave.toLowerCase()) !== -1 
 			});
 		}, [coins, fave, search, filter]);
 
