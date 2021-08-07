@@ -88,6 +88,7 @@ const Home = props => {
 		const localSearch = localStorage.getItem('search');
 		const localFilter = localStorage.getItem('filter');
 		const localItems = localStorage.getItem('items');
+		const localMints = localStorage.getItem('mints');
 		const searchField = React.createRef();
 		const linkRef = useRef({});
 		const history = useHistory();
@@ -127,6 +128,10 @@ const Home = props => {
 			}
 			if(localFave !== null){
 				setFave(localStorage.getItem('fave'));
+			}
+
+			if(localMints !== null){
+				setMints(localStorage.getItem('mints'));
 			}
 
 			if(localItems !== null){
@@ -180,7 +185,7 @@ const Home = props => {
 
 			return coins.filter(coin => {
 
-				
+				// Mints
 				if(mints.length){
 					if (mints.indexOf(coin.mint) === -1) {
 						return false
@@ -218,8 +223,10 @@ const Home = props => {
 
 	
 		useEffect(() => {
+			console.log(mints)
 			localStorage.setItem('filtered', JSON.stringify(filtered));
-		}, [filtered,sort,dir]);
+		    localStorage.setItem('mints', mints);
+		}, [filtered,sort,dir,mints]);
 
 		const total = '$' + Object.values(filtered).reduce((t, {estimate}) => t + parseFloat(estimate), 0).toFixed(2);
 	
@@ -353,39 +360,23 @@ const Home = props => {
 			}
 		}
 
-		const updateMints = arr => {
-			setMints(arr);
-			console.log(arr);
-			console.log(mints);
+
+		const handleMints = (event,checkbox) => {
+			console.log(checkbox);
+			if (event.target.checked) {
+		    	setMints([...mints, checkbox]);
+		    } else {
+				setMints(prevState => {
+					return prevState.filter((currItem) => currItem !== checkbox)
+				});
+		    }
 		}
 
-
-		const handleMints = event => {
-			console.log('clcik');
-			// console.log(mints);
-			let array = mints; // make a separate copy of the array
-			let index = array.indexOf(event.target.value)
-
-			if( event.target.checked ){
-				console.log('checked');
-				setMints(mints => [...mints, event.target.value]);
-			} else {
-			 	
-				//if(mints.length){
-
-					if (index !== -1) {
-						array.splice(index, 1);
-						updateMints(array);
-						console.log('unchecked');
-					}
-					
-				//}
-
+		const checkMint = value => {
+			if (mints.indexOf(value) !== -1) {
+				return 'checked'
 			}
-
-			localStorage.setItem('mints', array);
 		}
-
 
 		const goTo = props => {
 			history.push(props)
@@ -423,7 +414,6 @@ const Home = props => {
 					        type="text"
 					        value={search}
 					        placeholder="Eg. 0019 or 1884 or Morgan"
-					  
 					        onChange={handleSearch}
 					      />
 
@@ -448,13 +438,13 @@ const Home = props => {
 							id="favorite"
 							checked={fave}
 							onChange={handleCheckBox} />
-							 Favorites</label>
+							Favorites</label>
 					</div>
 
 
 					<div className={styles.checkboxItem}>
 						<fieldset>
-						<legend>Mints {mints}</legend>
+						<legend>Mints {mints.length}</legend>
 
 
 						{mintArray.map(({ name, value }, index) => {
@@ -464,7 +454,8 @@ const Home = props => {
 									name="mints"
 									id={'mint-' + value}
 									value={value}
-									onChange={handleMints} />
+									checked={checkMint(value)}
+									onChange={(event) => handleMints(event, value)} />
 								 	{name}</label>
 								 );
         					})}
