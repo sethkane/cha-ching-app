@@ -2,7 +2,7 @@ import React, {useEffect, useState, useMemo, useRef} from 'react';
 import { Link, useHistory, useLocation  } from "react-router-dom";
 import firebaseUtil from './FirebaseUtil';
 import styles from './Home.module.css'; 
-
+import { mintArray } from './MintArray';
 
 const getCoins = () => {
 	return firebaseUtil.getDb()
@@ -76,6 +76,7 @@ const Home = props => {
 		const [search, setSearch] = useState('');
 		const [fave, setFave] = useState('');
 		const [filter, setFilter] = useState('');
+		const [mints, setMints] = useState([]);
 		const [coins, setCoins] = useState([]);
 		const [items, setMore] = useState(10);
 		const [sort, setSort] = useState('id');
@@ -176,9 +177,15 @@ const Home = props => {
 		const coinTypes = getCoinTypes(coins);
 
 		const filtered = useMemo(() => {
-	
 
 			return coins.filter(coin => {
+
+				
+				if(mints.length){
+					if (mints.indexOf(coin.mint) === -1) {
+						return false
+					}
+				}
 
 				// Favorites
 				if (fave) {
@@ -207,7 +214,7 @@ const Home = props => {
 
 				// return   (fullName.toLowerCase().indexOf(search.toLowerCase()) !== -1 || coin.id.indexOf(search) !== -1 ) && coin.name.toLowerCase().indexOf(filter.toLowerCase()) !== -1 && fullName.toLowerCase().indexOf(fave.toLowerCase()) !== -1 
 			});
-		}, [coins, fave, search, filter]);
+		}, [coins, fave, search, filter, mints]);
 
 	
 		useEffect(() => {
@@ -346,12 +353,47 @@ const Home = props => {
 			}
 		}
 
+		const updateMints = arr => {
+			setMints(arr);
+			console.log(arr);
+			console.log(mints);
+		}
+
+
+		const handleMints = event => {
+			console.log('clcik');
+			// console.log(mints);
+			let array = mints; // make a separate copy of the array
+			let index = array.indexOf(event.target.value)
+
+			if( event.target.checked ){
+				console.log('checked');
+				setMints(mints => [...mints, event.target.value]);
+			} else {
+			 	
+				//if(mints.length){
+
+					if (index !== -1) {
+						array.splice(index, 1);
+						updateMints(array);
+						console.log('unchecked');
+					}
+					
+				//}
+
+			}
+
+			localStorage.setItem('mints', array);
+		}
+
 
 		const goTo = props => {
 			history.push(props)
 		}
     
 		const reset = () => {
+			setMints([]);
+			localStorage.setItem('mints', []);
 			setMore(10);
 			localStorage.setItem('items', 10);
 			setSearch('');
@@ -407,6 +449,26 @@ const Home = props => {
 							checked={fave}
 							onChange={handleCheckBox} />
 							 Favorites</label>
+					</div>
+
+
+					<div className={styles.checkboxItem}>
+						<fieldset>
+						<legend>Mints {mints}</legend>
+
+
+						{mintArray.map(({ name, value }, index) => {
+							return (
+								<label key={index} htmlFor={'mint-' + value}>
+								<input type="checkbox" 
+									name="mints"
+									id={'mint-' + value}
+									value={value}
+									onChange={handleMints} />
+								 	{name}</label>
+								 );
+        					})}
+						</fieldset>
 					</div>
 
 					<div className={styles.flexItem}>
