@@ -402,7 +402,7 @@ const Home = props => {
 			<main className={styles.home}>
 				<h1>Cha-Ching Coins</h1> 
 
-				<div className={styles.results}>
+				<section role="region" aria-label="Information Bar" className={styles.results}>
 				{filtered &&
 		    		<div aria-live="polite" aria-atomic="true" className={styles.push}>
 		    			{ user
@@ -411,10 +411,10 @@ const Home = props => {
 		    			}
 		    		</div>
 					}
-				</div>
+				</section>
 				<div className={styles.flex}>
 					
-					<div className={styles.facets}>
+					<section role="region" aria-label="Search and Filtering" className={styles.facets}>
 						<div>
 							<label htmlFor="search">Search</label>
 							<input
@@ -481,9 +481,9 @@ const Home = props => {
 							<button className={styles.reset} onClick={()=> {reset()}}><img src="/images/clear.svg" alt="" /> Reset</button>
 						</div>
 
-					</div>
+					</section>
 
-					<div className={styles.data}>
+					<section role="region" aria-label="Coin Results Table" className={styles.data}>
 
 						<table className={styles.table}>
 							<thead>
@@ -520,7 +520,7 @@ const Home = props => {
 							</tbody>
 							)}
 						</table>
-					</div>
+					</section>
 				</div>
 
 
