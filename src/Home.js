@@ -132,6 +132,8 @@ const Home = props => {
 
 			if(localMints !== null){
 				setMints(localStorage.getItem('mints'));
+			} else {
+				setMints([]);
 			}
 
 			if(localItems !== null){
@@ -223,10 +225,17 @@ const Home = props => {
 
 	
 		useEffect(() => {
-			console.log(mints)
 			localStorage.setItem('filtered', JSON.stringify(filtered));
-		    localStorage.setItem('mints', mints);
-		}, [filtered,sort,dir,mints]);
+		}, [filtered,sort,dir]);
+
+
+		useEffect(() => {
+
+			localStorage.setItem('mints', mints);
+			console.log(typeof mints)
+		    console.log(mints);
+		}, [mints]);
+			    
 
 		const total = '$' + Object.values(filtered).reduce((t, {estimate}) => t + parseFloat(estimate), 0).toFixed(2);
 	
@@ -362,7 +371,7 @@ const Home = props => {
 
 
 		const handleMints = (event,checkbox) => {
-			console.log(checkbox);
+			console.log('handle')
 			if (event.target.checked) {
 		    	setMints([...mints, checkbox]);
 		    } else {
@@ -370,12 +379,6 @@ const Home = props => {
 					return prevState.filter((currItem) => currItem !== checkbox)
 				});
 		    }
-		}
-
-		const checkMint = value => {
-			if (mints.indexOf(value) !== -1) {
-				return 'checked'
-			}
 		}
 
 		const goTo = props => {
@@ -444,7 +447,7 @@ const Home = props => {
 
 					<div className={styles.checkboxItem}>
 						<fieldset>
-						<legend>Mints {mints.length}</legend>
+						<legend>Mints {mints}, {mints.length}</legend>
 
 
 						{mintArray.map(({ name, value }, index) => {
@@ -454,7 +457,7 @@ const Home = props => {
 									name="mints"
 									id={'mint-' + value}
 									value={value}
-									checked={checkMint(value)}
+									checked={mints.indexOf(value) !== -1}
 									onChange={(event) => handleMints(event, value)} />
 								 	{name}</label>
 								 );
