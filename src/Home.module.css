@@ -68,7 +68,6 @@
 .home input {
 	padding: .25rem;
 	border-color: #000;
-	border-radius: .25rem;
 	font-size: 16px;
 	width: 100%;
 	box-sizing: border-box; 
@@ -86,7 +85,6 @@
 	width: 100%;
 	border-color: #000;
 	padding: .25rem;
-	border-radius: .25rem;
 	font-size: 16px;
 	border: 2px solid #000;
 }
