@@ -56,10 +56,14 @@
 	display: block;
 }
 
+.home .facets div{
+	margin-bottom:  .5rem;
+	margin-right: 1rem;
+}
+	
 .home label {
 	display: block;
 	font-size: 16px;
-	margin-top: .5rem;
 }
 .home input {
 	padding: .25rem;
@@ -78,7 +82,7 @@
 	padding: 0;
 }
 .home select {
-	min-width: 250px;
+	max-width: 250px;
 	width: 100%;
 	border-color: #000;
 	padding: .25rem;
@@ -112,16 +116,18 @@
 	.home .flex {
 		display: flex;
 		width: 100%;
-		margin-bottom: 1rem;
-		align-items: baseline;
-  		justify-content: center;
 	}
-	.home .flexItem{
-		margin-top: auto;
+	.home .results {
+		text-align:  right;
+	}
+	.home .facets {
+		width:  auto;
+	}
+	.home .data{
+		width: 100%;
 	}
 	.home .checkboxItem {
 		margin-top: auto;
-		margin-right: 1rem;
 		margin-bottom: 0;
 	}
 	.home .checkboxItem label{

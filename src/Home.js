@@ -8,7 +8,7 @@ const getCoins = () => {
 	return firebaseUtil.getDb()
    		.collection('coins')
    		.orderBy('id')
-		.limit(5) // Use this for Development
+		//.limit(5) // Use this for Development
     	.get()
      	.then(querySnapshot => {
 			return querySnapshot.docs.map(doc => ({docid: doc.id, ...doc.data()}));
@@ -402,71 +402,8 @@ const Home = props => {
 			<main className={styles.home}>
 				<h1>Cha-Ching Coins</h1> 
 
-
-				<div className={styles.flex}>
-					<div className={styles.flexItem}>
-						<label htmlFor="search">Search</label>
-						<input
-							ref={searchField}
-							id="search"
-					        type="text"
-					        value={search}
-					        placeholder="Eg. 0019 or 1884 or Morgan"
-					        onChange={handleSearch}
-					      />
-
-					</div>
-					<div className={styles.flexItem}>
-						<label htmlFor="filter">Filter</label>
-						<select
-							id="filter"
-							value={filter}
-							onChange={handleFilter}>
-							<option></option>
-							{ coinTypes.sort((a, b) => returnFilterSort(a,b)).map((types, index) =>
-							<option key={'filter_' + index}  value={types.name}>{types.name}</option>
-							)}
-						</select>
-					</div>
-
-					<div className={styles.checkboxItem}>
-						<label htmlFor="favorite">
-						<input type="checkbox" 
-							name="favorite"
-							id="favorite"
-							checked={fave}
-							onChange={handleCheckBox} />
-							Favorites</label>
-					</div>
-
-
-					<div className={styles.checkboxItem}>
-						<fieldset>
-						<legend>Mints</legend>
-
-
-						{mintArray.map(({ name, value }, index) => {
-							return (
-								<label key={index} htmlFor={'mint-' + value}>
-								<input type="checkbox" 
-									name="mints"
-									id={'mint-' + value}
-									value={value}
-									checked={mints.indexOf(value) !== -1}
-									onChange={(event) => handleMints(event, value)} />
-								 	{name}</label>
-								 );
-        					})}
-						</fieldset>
-					</div>
-
-					<div className={styles.flexItem}>
-						<button className={styles.reset} onClick={()=> {reset()}}><img src="/images/clear.svg" alt="" /> Reset</button>
-					</div>
-
-
-
-			    	{filtered &&
+				<div className={styles.results}>
+				{filtered &&
 		    		<div aria-live="polite" aria-atomic="true" className={styles.push}>
 		    			{ user
 		    			? <p>Results: {filtered.length} Coins | Est. {total}</p>
@@ -474,45 +411,117 @@ const Home = props => {
 		    			}
 		    		</div>
 					}
-
 				</div>
+				<div className={styles.flex}>
+					
+					<div className={styles.facets}>
+						<div>
+							<label htmlFor="search">Search</label>
+							<input
+								ref={searchField}
+								id="search"
+						        type="text"
+						        value={search}
+						        placeholder="Eg. 0019 or 1884 or Morgan"
+						        onChange={handleSearch}
+						      />
+
+						</div>
+						<div>
+							<label htmlFor="filter">Name Filter</label>
+							<select
+								id="filter"
+								value={filter}
+								onChange={handleFilter}>
+								<option></option>
+								{ coinTypes.sort((a, b) => returnFilterSort(a,b)).map((types, index) =>
+								<option key={'filter_' + index}  value={types.name}>{types.name}</option>
+								)}
+							</select>
+						</div>
+
+						<div className={styles.checkboxItem}>
+							<fieldset>
+								<legend>Special</legend>
+
+								<div className={styles.checkboxItem}>
+									<label htmlFor="favorite">
+									<input type="checkbox" 
+										name="favorite"
+										id="favorite"
+										checked={fave}
+										onChange={handleCheckBox} />
+										Favorites</label>
+								</div>
+							</fieldset>
+						</div>
 
 
-				<table className={styles.table}>
-					<thead>
-						<tr>
-							<SortHeading sort={sort} dir={dir} sortItem={sortItem} name="Coin #" id="id" showmodbile="true" arialabel="Sort by Coin #" />
-							<SortHeading sort={sort} dir={dir} sortItem={sortItem} name="Year" id="year" showmodbile="true" arialabel="Sort by Year" />
-							<SortHeading sort={sort} dir={dir} sortItem={sortItem} name="Name" id="name" showmodbile="false" arialabel="Sort by Name" />
-							<SortHeading sort={sort} dir={dir} sortItem={sortItem} name="Mint" id="mint" showmodbile="false" arialabel="Sort by Mint" />
-							<th className={styles.noPointer}>Front</th>
-						</tr>
-					</thead>
+						<div className={styles.checkboxItem}>
+							<fieldset>
+							<legend>Mints</legend>
 
-					{filtered?.length ? (
-					<tbody>
-						{ filtered.sort((a, b) => returnSort(a,b)).slice(0, items).map( (coin,index) => 
-							<tr key={coin.docid}  onClick={()=> {goTo('/coin/' + coin.id)}}>
-								<td><Link 
-									ref={(element) => linkRef.current[index]=element}
-									aria-label={'View details Coin #' + coin.id + ' ' + coin.year + '-' + coin.mint + ' ' + coin.name } 
-									className={styles.clickDisabled} 
-									to={'/coin/' + coin.id}>{coin.id}</Link></td>
-								<td>{coin.year}</td>
-								<td className={styles.showDesktop}>{coin.name}</td>
-								<td className={styles.showDesktop}>{coin.mint}</td>
-								<td><FavoriteIcon fave={coin.favorite} /> <img src={coin.photoArrPaths[0]} alt={'Front - ' + coin.year +'-' + coin.mint + ' ' + coin.name} /> </td>
-							</tr>
-						) }
 
-					</tbody>
+							{mintArray.map(({ name, value }, index) => {
+								return (
+									<label key={index} htmlFor={'mint-' + value}>
+									<input type="checkbox" 
+										name="mints"
+										id={'mint-' + value}
+										value={value}
+										checked={mints.indexOf(value) !== -1}
+										onChange={(event) => handleMints(event, value)} />
+									 	{name}</label>
+									 );
+	        					})}
+							</fieldset>
+						</div>
 
-					) : (
-					<tbody>
-						<tr><td colSpan="5">No Results</td></tr>
-					</tbody>
-					)}
-				</table>
+						<div>
+							<button className={styles.reset} onClick={()=> {reset()}}><img src="/images/clear.svg" alt="" /> Reset</button>
+						</div>
+
+					</div>
+
+					<div className={styles.data}>
+
+						<table className={styles.table}>
+							<thead>
+								<tr>
+									<SortHeading sort={sort} dir={dir} sortItem={sortItem} name="Coin #" id="id" showmodbile="true" arialabel="Sort by Coin #" />
+									<SortHeading sort={sort} dir={dir} sortItem={sortItem} name="Year" id="year" showmodbile="true" arialabel="Sort by Year" />
+									<SortHeading sort={sort} dir={dir} sortItem={sortItem} name="Name" id="name" showmodbile="false" arialabel="Sort by Name" />
+									<SortHeading sort={sort} dir={dir} sortItem={sortItem} name="Mint" id="mint" showmodbile="false" arialabel="Sort by Mint" />
+									<th className={styles.noPointer}>Front</th>
+								</tr>
+							</thead>
+
+							{filtered?.length ? (
+							<tbody>
+								{ filtered.sort((a, b) => returnSort(a,b)).slice(0, items).map( (coin,index) => 
+									<tr key={coin.docid}  onClick={()=> {goTo('/coin/' + coin.id)}}>
+										<td><Link 
+											ref={(element) => linkRef.current[index]=element}
+											aria-label={'View details Coin #' + coin.id + ' ' + coin.year + '-' + coin.mint + ' ' + coin.name } 
+											className={styles.clickDisabled} 
+											to={'/coin/' + coin.id}>{coin.id}</Link></td>
+										<td>{coin.year}</td>
+										<td className={styles.showDesktop}>{coin.name}</td>
+										<td className={styles.showDesktop}>{coin.mint}</td>
+										<td><FavoriteIcon fave={coin.favorite} /> <img src={coin.photoArrPaths[0]} alt={'Front - ' + coin.year +'-' + coin.mint + ' ' + coin.name} /> </td>
+									</tr>
+								) }
+
+							</tbody>
+
+							) : (
+							<tbody>
+								<tr><td colSpan="5">No Results</td></tr>
+							</tbody>
+							)}
+						</table>
+					</div>
+				</div>
 
 
 				{filtered.length>items &&
