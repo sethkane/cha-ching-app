@@ -2,7 +2,7 @@ import React, {useEffect, useState, useMemo, useRef} from 'react';
 import { Link, useHistory, useLocation  } from "react-router-dom";
 import firebaseUtil from './FirebaseUtil';
 import styles from './Home.module.css'; 
-
+import { mintArray } from './MintArray';
 
 const getCoins = () => {
 	return firebaseUtil.getDb()
@@ -76,6 +76,7 @@ const Home = props => {
 		const [search, setSearch] = useState('');
 		const [fave, setFave] = useState('');
 		const [filter, setFilter] = useState('');
+		const [mints, setMints] = useState([]);
 		const [coins, setCoins] = useState([]);
 		const [items, setMore] = useState(10);
 		const [sort, setSort] = useState('id');
@@ -87,6 +88,7 @@ const Home = props => {
 		const localSearch = localStorage.getItem('search');
 		const localFilter = localStorage.getItem('filter');
 		const localItems = localStorage.getItem('items');
+		const localMints = localStorage.getItem('mints');
 		const searchField = React.createRef();
 		const linkRef = useRef({});
 		const history = useHistory();
@@ -94,6 +96,7 @@ const Home = props => {
 		const title = 'Cha-Ching Coin Database';
 		const image = 'https://firebasestorage.googleapis.com/v0/b/cha-ching-7e248.appspot.com/o/1620405863007_front.png?alt=media&token=59ed6929-8b4e-4150-a0ab-bf70cf1f9dfb';
 		const date = new Date();
+
 		document.title = title;
 
 	    // Set Meta Date For This page
@@ -125,6 +128,12 @@ const Home = props => {
 			}
 			if(localFave !== null){
 				setFave(localStorage.getItem('fave'));
+			}
+
+			if(localMints !== null){
+				setMints(JSON.parse(localStorage.getItem('mints')));
+			} else {
+				setMints([]);
 			}
 
 			if(localItems !== null){
@@ -177,19 +186,53 @@ const Home = props => {
 		const filtered = useMemo(() => {
 
 			return coins.filter(coin => {
-				let fullName = coin.year + '-' + coin.mint + ' ' + coin.name + ' ' + coin.notes;
 
-				if(coin.favorite === 'true') {
-					fullName = fullName + ' :favorite'
+				// Mints
+				if(mints.length){
+					if (mints.indexOf(coin.mint) === -1) {
+						return false
+					}
 				}
-				return   (fullName.toLowerCase().indexOf(search.toLowerCase()) !== -1 || coin.id.indexOf(search) !== -1 ) && coin.name.toLowerCase().indexOf(filter.toLowerCase()) !== -1 && fullName.toLowerCase().indexOf(fave.toLowerCase()) !== -1 
+
+				// Favorites
+				if (fave) {
+					if(coin.favorite === 'false') {
+						return false
+					}
+				}
+
+				/// Filter Drop Down
+				if (coin.name.toLowerCase().indexOf(filter.toLowerCase()) === -1) {
+					return false
+				}
+
+				/// Search Query
+				if( coin.notes) {
+					if (coin.id.toLowerCase().indexOf(search.toLowerCase()) === -1 && coin.name.toLowerCase().indexOf(search.toLowerCase()) === -1 && coin.notes.toLowerCase().indexOf(search.toLowerCase()) === -1) {
+						return false
+					}
+				} else {
+					if (coin.id.toLowerCase().indexOf(search.toLowerCase()) === -1 && coin.name.toLowerCase().indexOf(search.toLowerCase()) === -1 ) {
+						return false
+					}
+				}
+
+				return true
+
+				// return   (fullName.toLowerCase().indexOf(search.toLowerCase()) !== -1 || coin.id.indexOf(search) !== -1 ) && coin.name.toLowerCase().indexOf(filter.toLowerCase()) !== -1 && fullName.toLowerCase().indexOf(fave.toLowerCase()) !== -1 
 			});
-		}, [coins, fave, search, filter]);
+		}, [coins, fave, search, filter, mints]);
 
 	
 		useEffect(() => {
 			localStorage.setItem('filtered', JSON.stringify(filtered));
 		}, [filtered,sort,dir]);
+
+
+		useEffect(() => {
+			localStorage.setItem('mints', JSON.stringify(mints));
+		}, [mints]);
+			    
 
 		const total = '$' + Object.values(filtered).reduce((t, {estimate}) => t + parseFloat(estimate), 0).toFixed(2);
 	
@@ -323,12 +366,23 @@ const Home = props => {
 			}
 		}
 
+		const handleMints = (event,checkbox) => {
+			if (event.target.checked) {
+		    	setMints([...mints, checkbox]);
+		    } else {
+				setMints(prevState => {
+					return prevState.filter((currItem) => currItem !== checkbox)
+				});
+		    }
+		}
 
 		const goTo = props => {
 			history.push(props)
 		}
     
 		const reset = () => {
+			setMints([]);
+			localStorage.setItem('mints', []);
 			setMore(10);
 			localStorage.setItem('items', 10);
 			setSearch('');
@@ -348,51 +402,8 @@ const Home = props => {
 			<main className={styles.home}>
 				<h1>Cha-Ching Coins</h1> 
 
-
-				<div className={styles.flex}>
-					<div className={styles.flexItem}>
-						<label htmlFor="search">Search</label>
-						<input
-							ref={searchField}
-							id="search"
-					        type="text"
-					        value={search}
-					        placeholder="Eg. 0019 or 1884 or Morgan"
-					  
-					        onChange={handleSearch}
-					      />
-
-					</div>
-					<div className={styles.flexItem}>
-						<label htmlFor="filter">Filter</label>
-						<select
-							id="filter"
-							value={filter}
-							onChange={handleFilter}>
-							<option></option>
-							{ coinTypes.sort((a, b) => returnFilterSort(a,b)).map((types, index) =>
-							<option key={'filter_' + index}  value={types.name}>{types.name}</option>
-							)}
-						</select>
-					</div>
-
-					<div className={styles.checkboxItem}>
-						<label htmlFor="favorite">
-						<input type="checkbox" 
-							name="favorite"
-							id="favorite"
-							checked={fave}
-							onChange={handleCheckBox} />
-							 Favorites</label>
-					</div>
-
-					<div className={styles.flexItem}>
-						<button className={styles.reset} onClick={()=> {reset()}}><img src="/images/clear.svg" alt="" /> Reset</button>
-					</div>
-
-
-
-			    	{filtered &&
+				<div className={styles.results}>
+				{filtered &&
 		    		<div aria-live="polite" aria-atomic="true" className={styles.push}>
 		    			{ user
 		    			? <p>Results: {filtered.length} Coins | Est. {total}</p>
@@ -400,45 +411,117 @@ const Home = props => {
 		    			}
 		    		</div>
 					}
-
 				</div>
+				<div className={styles.flex}>
+					
+					<div className={styles.facets}>
+						<div>
+							<label htmlFor="search">Search</label>
+							<input
+								ref={searchField}
+								id="search"
+						        type="text"
+						        value={search}
+						        placeholder="Eg. 0019 or 1884 or Morgan"
+						        onChange={handleSearch}
+						      />
+
+						</div>
+						<div>
+							<label htmlFor="filter">Name Filter</label>
+							<select
+								id="filter"
+								value={filter}
+								onChange={handleFilter}>
+								<option></option>
+								{ coinTypes.sort((a, b) => returnFilterSort(a,b)).map((types, index) =>
+								<option key={'filter_' + index}  value={types.name}>{types.name}</option>
+								)}
+							</select>
+						</div>
+
+						<div className={styles.checkboxItem}>
+							<fieldset>
+								<legend>Special</legend>
+
+								<div className={styles.checkboxItem}>
+									<label htmlFor="favorite">
+									<input type="checkbox" 
+										name="favorite"
+										id="favorite"
+										checked={fave}
+										onChange={handleCheckBox} />
+										Favorites</label>
+								</div>
+							</fieldset>
+						</div>
 
 
-				<table className={styles.table}>
-					<thead>
-						<tr>
-							<SortHeading sort={sort} dir={dir} sortItem={sortItem} name="Coin #" id="id" showmodbile="true" arialabel="Sort by Coin #" />
-							<SortHeading sort={sort} dir={dir} sortItem={sortItem} name="Year" id="year" showmodbile="true" arialabel="Sort by Year" />
-							<SortHeading sort={sort} dir={dir} sortItem={sortItem} name="Name" id="name" showmodbile="false" arialabel="Sort by Name" />
-							<SortHeading sort={sort} dir={dir} sortItem={sortItem} name="Mint" id="mint" showmodbile="false" arialabel="Sort by Mint" />
-							<th className={styles.noPointer}>Front</th>
-						</tr>
-					</thead>
+						<div className={styles.checkboxItem}>
+							<fieldset>
+							<legend>Mints</legend>
 
-					{filtered?.length ? (
-					<tbody>
-						{ filtered.sort((a, b) => returnSort(a,b)).slice(0, items).map( (coin,index) => 
-							<tr key={coin.docid}  onClick={()=> {goTo('/coin/' + coin.id)}}>
-								<td><Link 
-									ref={(element) => linkRef.current[index]=element}
-									aria-label={'View details Coin #' + coin.id + ' ' + coin.year + '-' + coin.mint + ' ' + coin.name } 
-									className={styles.clickDisabled} 
-									to={'/coin/' + coin.id}>{coin.id}</Link></td>
-								<td>{coin.year}</td>
-								<td className={styles.showDesktop}>{coin.name}</td>
-								<td className={styles.showDesktop}>{coin.mint}</td>
-								<td><FavoriteIcon fave={coin.favorite} /> <img src={coin.photoArrPaths[0]} alt={'Front - ' + coin.year +'-' + coin.mint + ' ' + coin.name} /> </td>
-							</tr>
-						) }
 
-					</tbody>
+							{mintArray.map(({ name, value }, index) => {
+								return (
+									<label key={index} htmlFor={'mint-' + value}>
+									<input type="checkbox" 
+										name="mints"
+										id={'mint-' + value}
+										value={value}
+										checked={mints.indexOf(value) !== -1}
+										onChange={(event) => handleMints(event, value)} />
+									 	{name}</label>
+									 );
+	        					})}
+							</fieldset>
+						</div>
 
-					) : (
-					<tbody>
-						<tr><td colSpan="5">No Results</td></tr>
-					</tbody>
-					)}
-				</table>
+						<div>
+							<button className={styles.reset} onClick={()=> {reset()}}><img src="/images/clear.svg" alt="" /> Reset</button>
+						</div>
+
+					</div>
+
+					<div className={styles.data}>
+
+						<table className={styles.table}>
+							<thead>
+								<tr>
+									<SortHeading sort={sort} dir={dir} sortItem={sortItem} name="Coin #" id="id" showmodbile="true" arialabel="Sort by Coin #" />
+									<SortHeading sort={sort} dir={dir} sortItem={sortItem} name="Year" id="year" showmodbile="true" arialabel="Sort by Year" />
+									<SortHeading sort={sort} dir={dir} sortItem={sortItem} name="Name" id="name" showmodbile="false" arialabel="Sort by Name" />
+									<SortHeading sort={sort} dir={dir} sortItem={sortItem} name="Mint" id="mint" showmodbile="false" arialabel="Sort by Mint" />
+									<th className={styles.noPointer}>Front</th>
+								</tr>
+							</thead>
+
+							{filtered?.length ? (
+							<tbody>
+								{ filtered.sort((a, b) => returnSort(a,b)).slice(0, items).map( (coin,index) => 
+									<tr key={coin.docid}  onClick={()=> {goTo('/coin/' + coin.id)}}>
+										<td><Link 
+											ref={(element) => linkRef.current[index]=element}
+											aria-label={'View details Coin #' + coin.id + ' ' + coin.year + '-' + coin.mint + ' ' + coin.name } 
+											className={styles.clickDisabled} 
+											to={'/coin/' + coin.id}>{coin.id}</Link></td>
+										<td>{coin.year}</td>
+										<td className={styles.showDesktop}>{coin.name}</td>
+										<td className={styles.showDesktop}>{coin.mint}</td>
+										<td><FavoriteIcon fave={coin.favorite} /> <img src={coin.photoArrPaths[0]} alt={'Front - ' + coin.year +'-' + coin.mint + ' ' + coin.name} /> </td>
+									</tr>
+								) }
+
+							</tbody>
+
+							) : (
+							<tbody>
+								<tr><td colSpan="5">No Results</td></tr>
+							</tbody>
+							)}
+						</table>
+					</div>
+				</div>
 
 
 				{filtered.length>items &&
