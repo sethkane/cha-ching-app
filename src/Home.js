@@ -131,7 +131,7 @@ const Home = props => {
 			}
 
 			if(localMints !== null){
-				setMints(localStorage.getItem('mints'));
+				setMints(JSON.parse(localStorage.getItem('mints')));
 			} else {
 				setMints([]);
 			}
@@ -230,10 +230,7 @@ const Home = props => {
 
 
 		useEffect(() => {
-
-			localStorage.setItem('mints', mints);
-			console.log(typeof mints)
-		    console.log(mints);
+			localStorage.setItem('mints', JSON.stringify(mints));
 		}, [mints]);
 			    
 
@@ -369,9 +366,7 @@ const Home = props => {
 			}
 		}
 
-
 		const handleMints = (event,checkbox) => {
-			console.log('handle')
 			if (event.target.checked) {
 		    	setMints([...mints, checkbox]);
 		    } else {
@@ -447,7 +442,7 @@ const Home = props => {
 
 					<div className={styles.checkboxItem}>
 						<fieldset>
-						<legend>Mints {mints}, {mints.length}</legend>
+						<legend>Mints</legend>
 
 
 						{mintArray.map(({ name, value }, index) => {
