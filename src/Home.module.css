@@ -117,7 +117,7 @@
 		display: flex;
 		width: 100%;
 	}
-	.home .results {
+	.home .results, .home .actions {
 		text-align:  right;
 	}
 	.home .facets {

@@ -524,9 +524,11 @@ const Home = props => {
 				</div>
 
 
-				{filtered.length>items &&
-				<button onClick={handleMore}>Show More</button>
-				}
+				<div className={styles.actions}>
+					{filtered.length>items &&
+					<button onClick={handleMore}>Show More</button>
+					}
+				</div>
 
 
 
