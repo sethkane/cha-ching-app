@@ -75,7 +75,7 @@
 }
 .home input[type="text"]:focus, .home select:focus, .home input[type="checkbox"]:focus{
 	outline:  none;
-	box-shadow:  0px 0px 0px 4px #007CC4;
+	box-shadow:  0px 0px 2px 2px #007CC4;
 }
 
 .home .checkboxItem input{

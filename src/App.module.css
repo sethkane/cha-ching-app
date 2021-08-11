@@ -8,7 +8,7 @@ a,button{
 }
 a:focus, button:focus{
 	outline:  none;
-	box-shadow:  0px 0px 0px 4px #007CC4;
+	box-shadow:  0px 0px 2px 2px #007CC4;
 }
 .main {
 	max-width: 1280px;
