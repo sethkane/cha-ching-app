@@ -67,11 +67,17 @@
 }
 .home input {
 	padding: .25rem;
+	border-color: #000;
 	border-radius: .25rem;
 	font-size: 16px;
 	width: 100%;
 	box-sizing: border-box; 
 }
+.home input[type="text"]:focus, .home select:focus, .home input[type="checkbox"]:focus{
+	outline:  none;
+	box-shadow:  0px 0px 0px 4px #007CC4;
+}
+
 .home .checkboxItem input{
 	width: auto;
 	margin-bottom: 1rem;
@@ -83,6 +89,7 @@
 .home select {
 	max-width: 250px;
 	width: 100%;
+	border-color: #000;
 	padding: .25rem;
 	border-radius: .25rem;
 	font-size: 16px;
