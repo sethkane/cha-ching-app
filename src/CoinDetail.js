@@ -159,7 +159,7 @@ const CoinDetail = props => {
           console.log('Firebase');
         });
       }
-    }, [id]);
+    }, [id,localCoins]);
 
    return (
 

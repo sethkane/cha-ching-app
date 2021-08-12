@@ -77,7 +77,9 @@
 	outline:  none;
 	box-shadow:  0px 0px 2px 2px #007CC4;
 }
-
+.home fieldset {
+	border:  2px solid #000;
+}
 .home .checkboxItem input{
 	width: auto;
 	margin-bottom: 1rem;

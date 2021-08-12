@@ -1,4 +1,4 @@
-import React, {useEffect,useRef} from 'react';
+import React, {useEffect} from 'react';
 import styles from './Magnifier.module.css'; 
 
 
@@ -12,15 +12,13 @@ const Magnifier = (props) => {
 	const theImage = React.createRef();
 	const theGlass = React.createRef();
 
-	let imgWidth = 0;
-	let imgHeight = 0;
 	let w;
 	let h;
 
 
 	useEffect(() => {
-		imgWidth = theImage.current.width;
-		imgHeight = theImage.current.height;
+		let imgWidth = theImage.current.width;
+		let imgHeight = theImage.current.height;
 
 		theGlass.current.style.backgroundImage = "url(" + src + ")";
 		if (imgWidth > 0 && imgWidth > 0 ){

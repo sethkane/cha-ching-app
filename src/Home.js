@@ -407,7 +407,7 @@ const Home = props => {
 			<main className={styles.home}>
 				<h1>Cha-Ching Coins</h1> 
 
-				<section role="region" aria-label="Information Bar" className={styles.results}>
+				<section aria-label="Information Bar" className={styles.results}>
 				{filtered &&
 		    		<div aria-live="polite" aria-atomic="true" className={styles.push}>
 		    			{ user
@@ -419,7 +419,7 @@ const Home = props => {
 				</section>
 				<div className={styles.flex}>
 					
-					<section role="region" aria-label="Search and Filtering" className={styles.facets}>
+					<section aria-label="Search and Filtering" className={styles.facets}>
 						<div>
 							<label htmlFor="search">Search</label>
 							<input
@@ -488,7 +488,7 @@ const Home = props => {
 
 					</section>
 
-					<section role="region" aria-label="Coin Results Table" className={styles.data}>
+					<section aria-label="Coin Results Table" className={styles.data}>
 
 						<table className={styles.table}>
 							<thead>
