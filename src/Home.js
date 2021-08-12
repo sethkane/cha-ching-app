@@ -307,8 +307,9 @@ const Home = props => {
 		// This is only used as needed
 		// const massUpdate = event => {
 		// 	coins.forEach(coin => {
+
+		// 		if(coin.favorite === '') {
 		// 			var update = firebaseUtil.getDb().collection("coins").doc(coin.docid);
-		// 			// Set the "capital" field of the city 'DC'
 		// 			return update.update({
 		// 			    favorite: 'false'
 		// 			})
@@ -319,6 +320,10 @@ const Home = props => {
 		// 			    // The document probably doesn't exist.
 		// 			    console.error("Error updating document: ", error);
 		// 			});
+		// 		} else {
+		// 			console.log('skip');
+		// 		}
+					
 		// 	});
 		// }
 
