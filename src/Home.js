@@ -208,11 +208,11 @@ const Home = props => {
 
 				/// Search Query
 				if( coin.notes) {
-					if (coin.id.toLowerCase().indexOf(search.toLowerCase()) === -1 && coin.name.toLowerCase().indexOf(search.toLowerCase()) === -1 && coin.notes.toLowerCase().indexOf(search.toLowerCase()) === -1) {
+					if (coin.id.toLowerCase().indexOf(search.toLowerCase()) === -1 && coin.name.toLowerCase().indexOf(search.toLowerCase()) === -1 && coin.year.toLowerCase().indexOf(search.toLowerCase()) === -1 && coin.notes.toLowerCase().indexOf(search.toLowerCase()) === -1) {
 						return false
 					}
 				} else {
-					if (coin.id.toLowerCase().indexOf(search.toLowerCase()) === -1 && coin.name.toLowerCase().indexOf(search.toLowerCase()) === -1 ) {
+					if (coin.id.toLowerCase().indexOf(search.toLowerCase()) === -1 && coin.name.toLowerCase().indexOf(search.toLowerCase()) === -1 && coin.year.toLowerCase().indexOf(search.toLowerCase()) === -1 ) {
 						return false
 					}
 				}
