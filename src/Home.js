@@ -8,7 +8,7 @@ const getCoins = () => {
 	return firebaseUtil.getDb()
    		.collection('coins')
    		.orderBy('id')
-		//.limit(5) // Use this for Development
+		.limit(5) // Use this for Development
     	.get()
      	.then(querySnapshot => {
 			return querySnapshot.docs.map(doc => ({docid: doc.id, ...doc.data()}));
@@ -403,6 +403,24 @@ const Home = props => {
 			history.push('')
 		};
 
+
+		const download = () => {
+			console.log( {filtered} )
+
+			let csvContent = "data:application/vnd.ms-excel";
+
+
+			csvContent += 'Test,One,Two,Three,<img src="https://firebasestorage.googleapis.com/v0/b/cha-ching-7e248.appspot.com/o/1627176968921_front.png?alt=media&token=fc49c78c-7eae-42d8-a5a2-8870c03b9f69">'
+
+
+
+			let encodedUri = encodeURI(csvContent);
+	        let link = document.createElement("a");
+	        link.setAttribute("href", encodedUri);
+	        link.setAttribute("download", "Stock_Price_Report.xls");
+	        link.click();
+		}
+
 		return (
 			<main className={styles.home}>
 				<h1>Cha-Ching Coins</h1> 
@@ -484,6 +502,7 @@ const Home = props => {
 
 						<div>
 							<button className={styles.reset} onClick={()=> {reset()}}><img src="/images/clear.svg" alt="" /> Reset</button>
+							<button className={styles.export} onClick={()=> {download()}}>Export</button>
 						</div>
 
 					</section>
