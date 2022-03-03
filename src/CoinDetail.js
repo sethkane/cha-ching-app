@@ -52,7 +52,7 @@ const CoinDetail = props => {
     const [fave, setFave] = useState();
     const [allCoins, setAllCoins] = useState({});
     const localCoins = localStorage.getItem('filtered');
-    const heading = useRef();
+    const mainRef = useRef();
     document.title = title;
 
 
@@ -140,7 +140,7 @@ const CoinDetail = props => {
         setTitle(coin[0].year + '-' + coin[0].mint + ' ' + coin[0].name + ' | Coin #' + coin[0].id + ' | Cha-Ching Coin Database');
         setImage(coin[0].photoArrPaths[0]);
         setFave(coin[0].favorite);
-        heading.current.focus();
+        mainRef.current.focus();
       }
     },[coin]);
 
@@ -163,12 +163,12 @@ const CoinDetail = props => {
 
    return (
 
-      <main className={styles.coinDetail}>
+      <main ref={mainRef} className={styles.coinDetail} aria-labelledby="mainHeading" tabIndex="-1">
       {coin?.length &&
         <div>
 
         <div className={styles.flex}>
-          <h1 ref={heading} tabIndex="-1" aria-describedby="favorite"><span>Coin #{coin[0].id}</span> {coin[0].year} {coin[0].name}</h1>
+          <h1 id="mainHeading" aria-describedby="favorite"><span>Coin #{coin[0].id}</span> {coin[0].year} {coin[0].name}</h1>
           <Favorite />
         </div>
 

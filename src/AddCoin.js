@@ -17,9 +17,14 @@ class AddCoin extends Component {
 		super(props);
 		this.videoRef = React.createRef();
 		this.formRef = React.createRef();
+		this.mainRef = React.createRef();
 		this.state = {}
+		document.title = 'Add New Coin | Cha-Ching Coin Database';
 	}
 
+	componentDidMount() {
+	    this.mainRef.current.focus();
+	}
 
 	captureImage = (props) => {
 		this.videoRef.current.takePicture(props);
@@ -109,8 +114,8 @@ class AddCoin extends Component {
   	render() {
 
 	    return (
-	    	<main className={styles.addCoin}>
-	    		<h1>Cha-Ching Coins</h1>
+	    	<main ref={this.mainRef} className={styles.addCoin} aria-labelledby="mainHeading" tabIndex="-1">
+	    		<h1 id="mainHeading">Add A New Coin</h1>
 	    		<div className={styles.flex}>
 		    		<div className={styles.flexItem}>
 			    		<Capture capture={this.captureImage} />

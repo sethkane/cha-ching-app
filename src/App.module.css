@@ -16,3 +16,6 @@ a:focus, button:focus{
 	margin: 0 auto;
 	font-family: Roboto;
 }
+main:focus{
+  /*outline: 0;*/
+}

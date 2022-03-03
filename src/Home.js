@@ -91,12 +91,12 @@ const Home = props => {
 		const localMints = localStorage.getItem('mints');
 		const searchField = React.createRef();
 		const linkRef = useRef({});
+		const mainRef = useRef();
 		const history = useHistory();
 		const hash = useLocation().hash;
 		const title = 'Cha-Ching Coin Database';
 		const image = 'https://firebasestorage.googleapis.com/v0/b/cha-ching-7e248.appspot.com/o/1620405863007_front.png?alt=media&token=59ed6929-8b4e-4150-a0ab-bf70cf1f9dfb';
 		const date = new Date();
-
 		document.title = title;
 
 	    // Set Meta Date For This page
@@ -404,8 +404,8 @@ const Home = props => {
 		};
 
 		return (
-			<main className={styles.home}>
-				<h1>Cha-Ching Coins</h1> 
+			<main ref={mainRef} className={styles.home} aria-labelledby="mainHeading" tabIndex="-1">
+				<h1 id="mainHeading">Cha-Ching Coins</h1> 
 
 				<section aria-label="Information Bar" className={styles.results}>
 				{filtered &&
