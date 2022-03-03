@@ -73,9 +73,12 @@ const CoinEdit = props => {
     const [coin, setCoin] = useState({});
     const [images, addNew] = useState(false);
     const videoRef = useRef(null);
+    const mainRef = useRef();
+    document.title = 'Edit Coin | Cha-Ching Coin Database';
 
     useEffect(() => {
        getCoin(docid).then(setCoin);
+       mainRef.current.focus();
     }, [docid]);
 
 
@@ -157,8 +160,8 @@ const CoinEdit = props => {
 
 
    return (
-      <main className={styles.coinEdit}>
-        <h1>Editing: {coin.year} {coin.name}</h1>
+      <main ref={mainRef} className={styles.coinEdit} aria-labelledby="mainHeading" tabIndex="-1">
+        <h1 id="mainHeading">Editing: {coin.year} {coin.name}</h1>
 
         <div className={styles.flex}>
           {coin && coin.photoArrPaths &&

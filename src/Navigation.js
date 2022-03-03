@@ -8,6 +8,7 @@ const Navigation = props => {
 	const reset = () => {
 		localStorage.removeItem('coins');
 		localStorage.removeItem('filtered');
+		alert('New Data Retrieved')
 	};
 
 	let user;
@@ -33,14 +34,14 @@ const Navigation = props => {
 						}
 						{ admin &&
 						<li>
-							<button onClick={reset}>Fetch</button>
+							<Link to="#" onClick={reset}>Fetch</Link>
 						</li>
 						}
 						<li className={styles.push}>
 						{
 							user
-							? <button onClick={props.auth.auth.signOut}>Sign out {props.auth.auth.user.displayName }</button>
-							: <button onClick={props.auth.auth.signInWithGoogle}>Sign in with Google</button>
+							? <Link to="#" onClick={props.auth.auth.signOut}>Sign out {props.auth.auth.user.displayName }</Link>
+							: <Link to="#" onClick={props.auth.auth.signInWithGoogle}>Sign in with Google</Link>
 							}
 						</li>
 					</ul>
