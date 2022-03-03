@@ -17,5 +17,5 @@ a:focus, button:focus{
 	font-family: Roboto;
 }
 main:focus{
-  /*outline: 0;*/
+  outline: 0;
 }
