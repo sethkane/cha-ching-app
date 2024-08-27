@@ -8,7 +8,7 @@ const Footer = (props) => {
 
 	return (
 		<footer className={styles.footer}>
-			<p>&copy; Copyright {year} <a href='https://twitter.com/onesixtieth'>Onesixtieth</a></p>
+			<p>&copy; Copyright {year} <a href='https://onesixtieth.com/'>Onesixtieth</a></p>
 			<p><a href='https://github.com/sethkane/cha-ching-app' rel='noopener noreferrer' target='_blank'>Check out this app on GitHub</a></p>
 			
 		</footer>
