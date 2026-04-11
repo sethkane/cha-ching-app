@@ -260,6 +260,12 @@ const Home = props => {
 				  	} else {
 				  		return parseFloat(b[sort]) - parseFloat(a[sort]);
 				  	}
+				  	case 'estimate	':
+				  	if(dir === 'asc') {
+				  		return parseFloat(a[sort]) - parseFloat(b[sort]);
+				  	} else {
+				  		return parseFloat(b[sort]) - parseFloat(a[sort]);
+				  	}
 			  	default:
 				  	let nameA = (a[sort] ?? '').toLowerCase();
 				  	let nameB = (b[sort] ?? '').toLowerCase();
@@ -497,6 +503,7 @@ const Home = props => {
 									<SortHeading sort={sort} dir={dir} sortItem={sortItem} name="Year" id="year" showmodbile="true" arialabel="Sort by Year" />
 									<SortHeading sort={sort} dir={dir} sortItem={sortItem} name="Name" id="name" showmodbile="false" arialabel="Sort by Name" />
 									<SortHeading sort={sort} dir={dir} sortItem={sortItem} name="Mint" id="mint" showmodbile="false" arialabel="Sort by Mint" />
+									<SortHeading sort={sort} dir={dir} sortItem={sortItem} name="Est" id="estimate" showmodbile="false" arialabel="Sort by Estimate" />
 									<th className={styles.noPointer}>Front</th>
 								</tr>
 							</thead>
@@ -513,6 +520,7 @@ const Home = props => {
 										<td>{coin.year}</td>
 										<td className={styles.showDesktop}>{coin.name}</td>
 										<td className={styles.showDesktop}>{coin.mint}</td>
+										<td className={styles.showDesktop}>${coin.estimate}</td>
 										<td><FavoriteIcon fave={coin.favorite} /> <img src={coin.photoArrPaths[0]} alt={'Front - ' + coin.year +'-' + coin.mint + ' ' + coin.name} /> </td>
 									</tr>
 								) }
