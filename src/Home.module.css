@@ -3,7 +3,10 @@
   width: 100%;
   margin-bottom: 1rem;
 }
-
+.home .table .checkboxCol {
+    max-width: 30px;
+    text-align: center;
+}
 .home .table tbody tr:nth-child(odd) {
    background-color: #ECECEC;
 }

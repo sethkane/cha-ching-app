@@ -1,0 +1,27 @@
+.coinEdit {
+	width: 100%;
+	padding: .5rem;
+}
+
+.coinEdit img {
+	max-width: 426px;
+}
+.coinEdit button{
+	padding: .5rem;
+}
+
+
+
+@media (min-width: 1024px) { 
+	
+	.coinEdit .flex {
+		display: flex;
+		justify-content: flex-start 
+	}
+	.coinEdit .flex .flexItem {
+		flex: 0; 
+		padding-right: 1rem;
+	}
+
+
+}

@@ -37,6 +37,16 @@ const Navigation = props => {
 							<Link to="#" onClick={reset}>Fetch</Link>
 						</li>
 						}
+						{ admin &&
+						<li>
+							<Link to="/backup">Backup</Link>
+						</li>
+						}
+						{ admin &&
+						<li>
+							<Link to="/bulk-edit">Bulk Edit</Link>
+						</li>
+						}
 						<li className={styles.push}>
 						{
 							user

@@ -261,8 +261,8 @@ const Home = props => {
 				  		return parseFloat(b[sort]) - parseFloat(a[sort]);
 				  	}
 			  	default:
-				  	let nameA = a[sort].toLowerCase();
-				  	let nameB = b[sort].toLowerCase();
+				  	let nameA = (a[sort] ?? '').toLowerCase();
+				  	let nameB = (b[sort] ?? '').toLowerCase();
 
 				  	if(dir === 'asc'){
 				  	 	if (nameA < nameB) {
