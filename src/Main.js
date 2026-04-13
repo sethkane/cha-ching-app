@@ -10,6 +10,7 @@ import Home from './Home';
 import AddCoin from './AddCoin';
 import CoinDetail from './CoinDetail';
 import CoinEdit from './CoinEdit';
+import CoinBackup from './CoinBackup';
 import BulkEdit from './BulkEdit';
 
 const Main = props => {
@@ -32,6 +33,12 @@ const Main = props => {
 					{props.auth.user && props.auth.user.uid === '0UTyRK7o0sNu8EFN5J8xqHiiV5q2' &&
 					<Route exact path="/add">
 						<AddCoin />
+					</Route>
+					}
+
+					{props.auth.user && props.auth.user.uid === '0UTyRK7o0sNu8EFN5J8xqHiiV5q2' &&
+					<Route exact path="/backup">
+					    <CoinBackup />
 					</Route>
 					}
 

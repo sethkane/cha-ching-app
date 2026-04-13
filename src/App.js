@@ -12,8 +12,6 @@ import Splash from './Splash';
 import styles from './App.module.css'; 
 import CoinDetailPublic from './CoinDetailPublic';
 import Footer from './Footer';
-import CoinBackup from './CoinBackup';
-import BulkEdit from './BulkEdit';
 firebaseUtil.init();
 
 const App = props => {
@@ -28,8 +26,6 @@ const App = props => {
 						<Footer auth={props} />
 					</div>
 				</Route>
-				<Route path="/bulkedit" component={BulkEdit} />
-				<Route path="/backup" component={CoinBackup} />
 				<Route path="/">
 					<div className={styles.main}>
 					{
