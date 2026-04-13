@@ -3,6 +3,8 @@ import { Link, useHistory, useLocation  } from "react-router-dom";
 import firebaseUtil from './FirebaseUtil';
 import styles from './Home.module.css'; 
 import { mintArray } from './MintArray';
+import jsPDF from 'jspdf';
+
 
 const getCoins = () => {
 	return firebaseUtil.getDb()
@@ -73,6 +75,8 @@ const FavoriteIcon = props => {
 
 const Home = props => {
 
+		const [exportImages, setExportImages] = useState(false);
+		const [exporting, setExporting] = useState(false);
 		const [search, setSearch] = useState('');
 		const [fave, setFave] = useState('');
 		const [filter, setFilter] = useState('');
@@ -390,6 +394,133 @@ const Home = props => {
 		const goTo = props => {
 			history.push(props)
 		}
+
+		const handleExportPDF = async () => {
+			setExporting(true);
+		    const visibleCoins = filtered.sort((a, b) => returnSort(a, b)).slice(0, items);
+		    const doc = new jsPDF({ orientation: 'landscape' });
+
+		    const pageWidth = doc.internal.pageSize.getWidth();
+		    const pageHeight = doc.internal.pageSize.getHeight();
+		    const margin = 10;
+		    const rowHeight = 40;
+		    const imgWidth = 47;
+		    const imgHeight = 35;
+		    const colWidths = {
+		        id: 15,
+		        year: 20,
+		        name: 50,
+		        mint: 20,
+		        estimate: 25,
+		        front: imgWidth + 5,
+		        back: imgWidth + 5,
+		    };
+
+		    const drawHeader = () => {
+		        doc.setFillColor(204, 204, 204);
+		        doc.rect(margin, 10, pageWidth - margin * 2, 8, 'F');
+		        doc.setFontSize(9);
+		        doc.setFont('helvetica', 'bold');
+		        let x = margin + 2;
+		        doc.text('Coin #', x, 16); x += colWidths.id;
+		        doc.text('Year', x, 16); x += colWidths.year;
+		        doc.text('Name', x, 16); x += colWidths.name;
+		        doc.text('Mint', x, 16); x += colWidths.mint;
+		        doc.text('Estimate', x, 16); x += colWidths.estimate;
+		        doc.text('Front', x, 16); x += colWidths.front;
+		        doc.text('Back', x, 16);
+		    };
+
+		    const fetchImageAsBase64 = async (url) => {
+		        try {
+		            const response = await fetch(url);
+		            const blob = await response.blob();
+		            return await new Promise(resolve => {
+		                const reader = new FileReader();
+		                reader.onloadend = () => resolve(reader.result);
+		                reader.readAsDataURL(blob);
+		            });
+		        } catch (err) {
+		            console.log('Image fetch error:', err);
+		            return null;
+		        }
+		    };
+
+		    doc.setFontSize(16);
+		    doc.setFont('helvetica', 'bold');
+		    doc.text('Cha-Ching Coin Database', margin, 8);
+		    doc.setFontSize(10);
+		    doc.setFont('helvetica', 'normal');
+		    doc.text(`Exported: ${new Date().toLocaleDateString()} | ${visibleCoins.length} coins`, pageWidth - margin, 8, { align: 'right' });
+
+		    drawHeader();
+
+		    let y = 20;
+
+		    for (let i = 0; i < visibleCoins.length; i++) {
+		        const coin = visibleCoins[i];
+
+		        if (y + rowHeight > pageHeight - margin) {
+		            doc.addPage();
+		            doc.setFontSize(16);
+		            doc.setFont('helvetica', 'bold');
+		            doc.text('Cha-Ching Coin Database', margin, 8);
+		            doc.setFontSize(10);
+		            doc.setFont('helvetica', 'normal');
+		            doc.text(`Exported: ${new Date().toLocaleDateString()} | ${visibleCoins.length} coins`, pageWidth - margin, 8, { align: 'right' });
+		            drawHeader();
+		            y = 20;
+		        }
+
+		        if (i % 2 === 0) {
+		            doc.setFillColor(236, 236, 236);
+		            doc.rect(margin, y, pageWidth - margin * 2, rowHeight, 'F');
+		        }
+
+		        doc.setFontSize(9);
+		        doc.setFont('helvetica', 'normal');
+		        let x = margin + 2;
+		        const textY = y + rowHeight / 2;
+
+		        doc.text(String(coin.id ?? ''), x, textY); x += colWidths.id;
+		        doc.text(String(coin.year ?? ''), x, textY); x += colWidths.year;
+
+		        const nameLines = doc.splitTextToSize(String(coin.name ?? ''), colWidths.name - 2);
+		        doc.text(nameLines, x, textY - ((nameLines.length - 1) * 3)); x += colWidths.name;
+
+		        doc.text(String(coin.mint ?? ''), x, textY); x += colWidths.mint;
+		        doc.text(coin.estimate ? '$' + coin.estimate : '', x, textY); x += colWidths.estimate;
+
+		        if (exportImages) {
+		            const frontBase64 = await fetchImageAsBase64(coin.photoArrPaths[0]);
+		            const backBase64 = await fetchImageAsBase64(coin.photoArrPaths[1]);
+
+		            if (frontBase64) {
+		                doc.addImage(frontBase64, 'PNG', x, y + 2, imgWidth, imgHeight);
+		            }
+		            x += colWidths.front;
+		            if (backBase64) {
+		                doc.addImage(backBase64, 'PNG', x, y + 2, imgWidth, imgHeight);
+		            }
+		        } else {
+		            doc.setFontSize(6);
+		            doc.setTextColor(0, 0, 255);
+		            doc.text(coin.photoArrPaths[0] ?? '', x, textY, { maxWidth: colWidths.front - 2 });
+		            x += colWidths.front;
+		            doc.text(coin.photoArrPaths[1] ?? '', x, textY, { maxWidth: colWidths.back - 2 });
+		            doc.setTextColor(0, 0, 0);
+		            doc.setFontSize(9);
+		        }
+
+		        doc.setDrawColor(180, 180, 180);
+		        doc.rect(margin, y, pageWidth - margin * 2, rowHeight, 'S');
+
+		        y += rowHeight;
+		    }
+
+		    doc.save(`coins-export-${new Date().toISOString().split('T')[0]}.pdf`);
+		    setExporting(false);
+		};
     
 		const reset = () => {
 			setMints([]);
@@ -408,6 +539,8 @@ const Home = props => {
 			localStorage.setItem('sort', 'id');
 			history.push('')
 		};
+
+
 
 		return (
 			<main ref={mainRef} className={styles.home} aria-labelledby="mainHeading" tabIndex="-1">
@@ -491,6 +624,23 @@ const Home = props => {
 						<div>
 							<button className={styles.reset} onClick={()=> {reset()}}><img src="/images/clear.svg" alt="" /> Reset</button>
 						</div>
+
+						{user &&
+						    <div>
+						        <label>
+						            <input
+						                type="checkbox"
+						                checked={exportImages}
+						                onChange={e => setExportImages(e.target.checked)}
+						            />
+						            {' '}Include images
+						        </label>
+						        <button onClick={handleExportPDF} disabled={exporting}>
+								    {exporting ? 'Exporting...' : `Export to PDF (${Math.min(items, filtered.length)} coins)`}
+								</button>
+						    </div>
+						}
+
 
 					</section>
 
