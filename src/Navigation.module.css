@@ -24,12 +24,18 @@
 	text-decoration: underline;
 	background: none;
 }
+.header .hideMobile{
+	display: none;
+}
 
 
 @media (min-width: 1024px) { 
 	
 	.header {
 		margin: 1rem 0;
+	}
+	.header .hideMobile{
+		display: block;
 	}
 
 }

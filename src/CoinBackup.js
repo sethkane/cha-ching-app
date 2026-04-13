@@ -97,105 +97,130 @@ const CoinBackup = () => {
                 setStatus(`Fetched ${coins.length} coins. Building PDF...`);
             }
 
-            const doc = new jsPDF({ orientation: 'landscape' });
-            const pageWidth = doc.internal.pageSize.getWidth();
-            const pageHeight = doc.internal.pageSize.getHeight();
-            const margin = 10;
-            const rowHeight = 40;
-            const imgWidth = 35;
-            const imgHeight = 35;
-            const colWidths = {
-                id: 15,
-                year: 20,
-                name: 50,
-                mint: 20,
-                estimate: 25,
-                front: imgWidth + 5,
-                back: imgWidth + 5,
-            };
+            const chunkSize = 50;
+            const totalChunks = Math.ceil(coins.length / chunkSize);
+            const date = new Date().toISOString().split('T')[0];
 
-            const drawHeader = () => {
-                doc.setFillColor(204, 204, 204);
-                doc.rect(margin, 10, pageWidth - margin * 2, 8, 'F');
-                doc.setFontSize(9);
-                doc.setFont('helvetica', 'bold');
-                let x = margin + 2;
-                doc.text('Coin #', x, 16); x += colWidths.id;
-                doc.text('Year', x, 16); x += colWidths.year;
-                doc.text('Name', x, 16); x += colWidths.name;
-                doc.text('Mint', x, 16); x += colWidths.mint;
-                doc.text('Estimate', x, 16); x += colWidths.estimate;
-                doc.text('Front', x, 16); x += colWidths.front;
-                doc.text('Back', x, 16);
-            };
+            for (let chunk = 0; chunk < totalChunks; chunk++) {
+                const start = chunk * chunkSize;
+                const end = Math.min(start + chunkSize, coins.length);
+                const chunkCoins = coins.slice(start, end);
 
-            doc.setFontSize(16);
-            doc.setFont('helvetica', 'bold');
-            doc.text('Cha-Ching Coin Database — Full Catalog', margin, 8);
-            doc.setFontSize(10);
-            doc.setFont('helvetica', 'normal');
-            doc.text(`Exported: ${new Date().toLocaleDateString()} | ${coins.length} coins`, pageWidth - margin, 8, { align: 'right' });
+                setStatus(`Building PDF ${chunk + 1} of ${totalChunks} (coins ${start + 1}–${end})...`);
 
-            drawHeader();
+                const doc = new jsPDF({ orientation: 'landscape' });
+                const pageWidth = doc.internal.pageSize.getWidth();
+                const pageHeight = doc.internal.pageSize.getHeight();
+                const margin = 10;
+                const rowHeight = 40;
+                const imgWidth = 47;
+                const imgHeight = 35;
+                const colWidths = {
+                    id: 15,
+                    year: 20,
+                    name: 50,
+                    mint: 20,
+                    estimate: 25,
+                    front: imgWidth + 5,
+                    back: imgWidth + 5,
+                };
 
-            let y = 20;
-
-            for (let i = 0; i < coins.length; i++) {
-                const coin = coins[i];
-
-                setStatus(`Processing coin ${i + 1} of ${coins.length}...`);
-
-                if (y + rowHeight > pageHeight - margin) {
-                    doc.addPage();
-                    doc.setFontSize(16);
+                const drawHeader = () => {
+                    doc.setFillColor(204, 204, 204);
+                    doc.rect(margin, 10, pageWidth - margin * 2, 8, 'F');
+                    doc.setFontSize(9);
                     doc.setFont('helvetica', 'bold');
-                    doc.text('Cha-Ching Coin Database — Full Catalog', margin, 8);
-                    doc.setFontSize(10);
-                    doc.setFont('helvetica', 'normal');
-                    doc.text(`Exported: ${new Date().toLocaleDateString()} | ${coins.length} coins`, pageWidth - margin, 8, { align: 'right' });
-                    drawHeader();
-                    y = 20;
-                }
+                    let x = margin + 2;
+                    doc.text('Coin #', x, 16); x += colWidths.id;
+                    doc.text('Year', x, 16); x += colWidths.year;
+                    doc.text('Name', x, 16); x += colWidths.name;
+                    doc.text('Mint', x, 16); x += colWidths.mint;
+                    doc.text('Estimate', x, 16); x += colWidths.estimate;
+                    doc.text('Front', x, 16); x += colWidths.front;
+                    doc.text('Back', x, 16);
+                };
 
-                if (i % 2 === 0) {
-                    doc.setFillColor(236, 236, 236);
-                    doc.rect(margin, y, pageWidth - margin * 2, rowHeight, 'F');
-                }
-
-                doc.setFontSize(9);
+                doc.setFontSize(16);
+                doc.setFont('helvetica', 'bold');
+                doc.text('Cha-Ching Coin Database — Full Catalog', margin, 8);
+                doc.setFontSize(10);
                 doc.setFont('helvetica', 'normal');
-                let x = margin + 2;
-                const textY = y + rowHeight / 2;
+                doc.text(
+                    `Part ${chunk + 1} of ${totalChunks} | Coins ${start + 1}–${end} | Exported: ${new Date().toLocaleDateString()}`,
+                    pageWidth - margin, 8, { align: 'right' }
+                );
 
-                doc.text(String(coin.id ?? ''), x, textY); x += colWidths.id;
-                doc.text(String(coin.year ?? ''), x, textY); x += colWidths.year;
+                drawHeader();
 
-                const nameLines = doc.splitTextToSize(String(coin.name ?? ''), colWidths.name - 2);
-                doc.text(nameLines, x, textY - ((nameLines.length - 1) * 3)); x += colWidths.name;
+                let y = 20;
 
-                doc.text(String(coin.mint ?? ''), x, textY); x += colWidths.mint;
-                doc.text(coin.estimate ? '$' + coin.estimate : '', x, textY); x += colWidths.estimate;
+                for (let i = 0; i < chunkCoins.length; i++) {
+                    const coin = chunkCoins[i];
 
-                const frontBase64 = await fetchImageAsBase64(coin.photoArrPaths[0]);
-                const backBase64 = await fetchImageAsBase64(coin.photoArrPaths[1]);
+                    setStatus(`PDF ${chunk + 1} of ${totalChunks} — processing coin ${start + i + 1} of ${coins.length}...`);
 
-                if (frontBase64) {
-                    doc.addImage(frontBase64, 'PNG', x, y + 2, imgWidth, imgHeight);
+                    if (y + rowHeight > pageHeight - margin) {
+                        doc.addPage();
+                        doc.setFontSize(16);
+                        doc.setFont('helvetica', 'bold');
+                        doc.text('Cha-Ching Coin Database — Full Catalog', margin, 8);
+                        doc.setFontSize(10);
+                        doc.setFont('helvetica', 'normal');
+                        doc.text(
+                            `Part ${chunk + 1} of ${totalChunks} | Coins ${start + 1}–${end} | Exported: ${new Date().toLocaleDateString()}`,
+                            pageWidth - margin, 8, { align: 'right' }
+                        );
+                        drawHeader();
+                        y = 20;
+                    }
+
+                    if (i % 2 === 0) {
+                        doc.setFillColor(236, 236, 236);
+                        doc.rect(margin, y, pageWidth - margin * 2, rowHeight, 'F');
+                    }
+
+                    doc.setFontSize(9);
+                    doc.setFont('helvetica', 'normal');
+                    let x = margin + 2;
+                    const textY = y + rowHeight / 2;
+
+                    doc.text(String(coin.id ?? ''), x, textY); x += colWidths.id;
+                    doc.text(String(coin.year ?? ''), x, textY); x += colWidths.year;
+
+                    const nameLines = doc.splitTextToSize(String(coin.name ?? ''), colWidths.name - 2);
+                    doc.text(nameLines, x, textY - ((nameLines.length - 1) * 3)); x += colWidths.name;
+
+                    doc.text(String(coin.mint ?? ''), x, textY); x += colWidths.mint;
+                    doc.text(coin.estimate ? '$' + coin.estimate : '', x, textY); x += colWidths.estimate;
+
+                    const frontBase64 = await fetchImageAsBase64(coin.photoArrPaths[0]);
+                    const backBase64 = await fetchImageAsBase64(coin.photoArrPaths[1]);
+
+                    if (frontBase64) {
+                        doc.addImage(frontBase64, 'PNG', x, y + 2, imgWidth, imgHeight);
+                    }
+                    x += colWidths.front;
+                    if (backBase64) {
+                        doc.addImage(backBase64, 'PNG', x, y + 2, imgWidth, imgHeight);
+                    }
+
+                    // Give browser a moment to breathe between images
+                    await new Promise(resolve => setTimeout(resolve, 50));
+
+                    doc.setDrawColor(180, 180, 180);
+                    doc.rect(margin, y, pageWidth - margin * 2, rowHeight, 'S');
+
+                    y += rowHeight;
                 }
-                x += colWidths.front;
-                if (backBase64) {
-                    doc.addImage(backBase64, 'PNG', x, y + 2, imgWidth, imgHeight);
-                }
 
-                doc.setDrawColor(180, 180, 180);
-                doc.rect(margin, y, pageWidth - margin * 2, rowHeight, 'S');
+                // Save this chunk and free memory before starting the next
+                doc.save(`coins-catalog-${date}-part${chunk + 1}of${totalChunks}.pdf`);
 
-                y += rowHeight;
+                // Small delay to let the browser breathe between chunks
+                await new Promise(resolve => setTimeout(resolve, 2000));
             }
 
-            const date = new Date().toISOString().split('T')[0];
-            doc.save(`coins-catalog-${date}.pdf`);
-            setStatus(`✓ PDF catalog of ${coins.length} coins exported successfully.`);
+            setStatus(`✓ Done! ${totalChunks} PDF files saved successfully.`);
 
         } catch (error) {
             console.error('PDF export error:', error);

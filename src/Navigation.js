@@ -39,12 +39,12 @@ const Navigation = props => {
 						}
 						{ admin &&
 						<li>
-							<Link to="/backup">Backup</Link>
+							<Link to="/backup" className={styles.hideMobile}>Backup</Link>
 						</li>
 						}
 						{ admin &&
 						<li>
-							<Link to="/bulk-edit">Bulk Edit</Link>
+							<Link to="/bulk-edit" className={styles.hideMobile}>Bulk Edit</Link>
 						</li>
 						}
 						<li className={styles.push}>
